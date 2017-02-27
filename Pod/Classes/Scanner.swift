@@ -9,6 +9,11 @@ open class Scanner: NSObject {
         self.shared.delegate = delegate
         
     }
+
+    open class func stopScan() {
+        self.shared.centralManager.stopScan()
+        self.shared.delegate = nil
+    }
     
     //Returns an array of Url objects that are nearby
     open class var nearbyUrls: [Url] {
