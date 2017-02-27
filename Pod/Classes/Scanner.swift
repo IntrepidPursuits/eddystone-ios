@@ -67,7 +67,7 @@ open class Scanner: NSObject {
                     url = urlFrame.url as URL
                 }
                 
-                let generic = Generic(url: url, namespace: namespace, instance: instance, signalStrength: beacon.signalStrength, identifier: beacon.identifier)
+                let generic = Generic(url: url, namespace: namespace, instance: instance, signalStrength: beacon.signalStrength, identifier: beacon.identifier, rssi: beacon.rssiBuffer.first ?? 0, txPower: beacon.txPower)
                 if let tlmFrame = beacon.frames.tlm {
                     generic.parseTlmFrame(tlmFrame)
                 }
@@ -134,10 +134,10 @@ extension Scanner: CBCentralManagerDelegate {
             if let beacon = Beacon.beaconWithAdvertisementData(advertisementData, rssi: RSSI.doubleValue, identifier: identifier) {
                 beacon.delegate = self
                 self.discoveredBeacons[peripheral.identifier.uuidString] = beacon
-                self.notifyChange()
             }
         }
         
+        self.notifyChange()
         self.beaconTimers[identifier]?.invalidate()
         self.beaconTimers[identifier] = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(Scanner.beaconTimerExpire(_:)), userInfo: identifier, repeats: false)
     }
