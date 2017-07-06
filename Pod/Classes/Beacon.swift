@@ -192,7 +192,7 @@ open class Beacon {
         if bytes.count >= 2 {
             if let type = Beacon.frameTypeFromBytes(bytes) {
                 if type == .uid || type == .url {
-                    return Int(bytes[1])
+                    return Int(Int8(bitPattern: UInt8(bytes[1])))
                 }
             }
         }
